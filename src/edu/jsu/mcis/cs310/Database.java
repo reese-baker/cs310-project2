@@ -26,6 +26,27 @@ public class Database {
         
         // INSERT YOUR CODE HERE
         
+        try {
+            String query = "SELECT * FROM section WHERE termid = ? AND subjectid = ? AND num = ?;";
+            PreparedStatement prepst = connection.prepareStatement(query);
+            prepst.setInt(1, termid);
+            prepst.setString(2, subjectid);
+            prepst.setString(3, num);
+            
+            boolean hasresults = prepst.execute();
+            
+            if (hasresults){
+                ResultSet resultset = prepst.getResultSet();
+                result = getResultSetAsJSON(resultset);
+                
+            }
+        }
+        
+        catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+        
         return result;
         
     }
@@ -35,6 +56,23 @@ public class Database {
         int result = 0;
         
         // INSERT YOUR CODE HERE
+        
+        try {
+            
+            String query = "INSERT INTO registration (studentid, termid, crn) VALUES (?, ?, ?);";
+            PreparedStatement prepst = connection.prepareStatement(query);
+            prepst.setInt(1, studentid);
+            prepst.setInt(2, termid);
+            prepst.setInt(3, crn);
+            
+            result = prepst.executeUpdate();
+            
+        }    
+                
+        catch (Exception e) {
+            e.printStackTrace();
+            
+        }
         
         return result;
         
@@ -46,6 +84,23 @@ public class Database {
         
         // INSERT YOUR CODE HERE
         
+        try {
+            
+            String query = "DELETE FROM registration WHERE studentid = ? AND termid = ? AND crn = ?;";
+            PreparedStatement prepst = connection.prepareStatement(query);
+            prepst.setInt(1, studentid);
+            prepst.setInt(2, termid);
+            prepst.setInt(3, crn);
+            
+            result = prepst.executeUpdate();
+            
+        }
+        
+        catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+        
         return result;
         
     }
@@ -56,6 +111,22 @@ public class Database {
         
         // INSERT YOUR CODE HERE
         
+        try {
+            
+            String query = "DELETE FROM registration WHERE studentid = ? AND termid = ?;";
+            PreparedStatement prepst = connection.prepareStatement(query);
+            prepst.setInt(1, studentid);
+            prepst.setInt(2, termid);
+            
+            result = prepst.executeUpdate();
+            
+        }
+        
+        catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+        
         return result;
         
     }
@@ -65,6 +136,26 @@ public class Database {
         String result = null;
         
         // INSERT YOUR CODE HERE
+        
+        try {
+            
+            String query = "SELECT * FROM registration JOIN section ON registration.crn = section.crn;";
+            PreparedStatement prepst = connection.prepareStatement(query);
+            
+            boolean hasresults = prepst.execute();
+            
+            if (hasresults) {
+                ResultSet resultset = prepst.getResultSet();
+                result = getResultSetAsJSON(resultset);
+                
+            }
+            
+        }
+        
+        catch (Exception e) {
+            e.printStackTrace();
+ 
+        }
         
         return result;
         
@@ -130,7 +221,7 @@ public class Database {
         
             try {
 
-                String url = "jdbc:mysql://" + a + "/jsu_sp22_v1?autoReconnect=true&useSSL=false&zeroDateTimeBehavior=CONVERT_TO_NULL&serverTimezone=America/Chicago";
+                String url = "jdbc:mysql://" + a + "/jsu_sp22_v1?autoReconnect=true&useSSL=false&zeroDateTimeBehavior=EXCEPTION&serverTimezone=America/Chicago";
                 // System.err.println("Connecting to " + url + " ...");
 
                 c = DriverManager.getConnection(url, u, p);
